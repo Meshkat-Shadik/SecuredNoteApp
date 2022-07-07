@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:secured_note_app/constants.dart';
 import 'package:secured_note_app/extensions/toast_x.dart';
@@ -60,6 +61,7 @@ class _DetailsPageState extends State<DetailsPage> {
       color: selectedHeadingColor!.value,
       bodyColor: selectedDescriptionColor!.value,
       isFav: prevNote!.isFav,
+      modifiedAt: DateTime.now().microsecondsSinceEpoch,
     );
     if (prevNote != newNote) {
       firestore.updateNote(widget.id!, newNote).whenComplete(
@@ -80,6 +82,7 @@ class _DetailsPageState extends State<DetailsPage> {
       color: selectedHeadingColor!.value,
       bodyColor: selectedDescriptionColor!.value,
       isFav: false,
+      modifiedAt: DateTime.now().microsecondsSinceEpoch,
     );
     firestore.addNote(note).whenComplete(() => Navigator.pop(context));
   }

@@ -12,11 +12,13 @@ extension FirestoreX on FirebaseFirestore {
             .doc(user!.uid)
             .collection('note-item')
             .where('isFav', isEqualTo: true)
+            .orderBy('modifiedAt', descending: true)
             .snapshots()
         : FirebaseFirestore.instance
             .collection('notes')
             .doc(user!.uid)
             .collection('note-item')
+            .orderBy('modifiedAt', descending: true)
             .snapshots();
   }
 

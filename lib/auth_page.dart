@@ -33,17 +33,22 @@ class _AuthPageState extends State<AuthPage> {
                       idToken: googleAuthentication.idToken,
                     );
 
-                    await firebaseAuth
+                    firebaseAuth
                         .signInWithCredential(authCredential)
-                        .then((value) async {
-                      final isAuthenticated = await LocalAuthApi.authenticate();
-                      if (isAuthenticated) {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) => const HomePage(),
-                          ),
-                        );
-                      }
+                        .then((value) {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => const HomePage(),
+                        ),
+                      );
+                      // final isAuthenticated = await LocalAuthApi.authenticate();
+                      // if (isAuthenticated) {
+                      //   Navigator.of(context).push(
+                      //     MaterialPageRoute(
+                      //       builder: (context) => const HomePage(),
+                      //     ),
+                      //   );
+                      // }
                     });
                   }
                 },

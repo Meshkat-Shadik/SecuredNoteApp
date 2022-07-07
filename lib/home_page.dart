@@ -8,6 +8,7 @@ import 'package:secured_note_app/widgets/alert_dialog.dart';
 import 'package:secured_note_app/widgets/my_bottom_appbar.dart';
 import 'package:secured_note_app/extensions/firestore_x.dart';
 import './extensions/toast_x.dart';
+import 'package:intl/intl.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -47,7 +48,7 @@ class _HomePageState extends State<HomePage> {
                     itemCount: snapshot.data!.docs.length,
                     gridDelegate:
                         const SliverGridDelegateWithFixedCrossAxisCount(
-                      childAspectRatio: 2 / 1.7,
+                      childAspectRatio: 2 / 2.1,
                       crossAxisCount: 2,
                       crossAxisSpacing: 20,
                       mainAxisSpacing: 20,
@@ -90,7 +91,7 @@ class _HomePageState extends State<HomePage> {
                               ClipRRect(
                                 borderRadius: BorderRadius.circular(10),
                                 child: Container(
-                                  height: 40,
+                                  height: 60,
                                   width: size.width / 2.2,
                                   alignment: Alignment.center,
                                   child: Row(
@@ -132,6 +133,11 @@ class _HomePageState extends State<HomePage> {
                                     ],
                                   ),
                                 ),
+                              ),
+                              Text(
+                                'Updated: ${DateFormat.yMd().add_jm().format(DateTime.fromMicrosecondsSinceEpoch(convertedValue.modifiedAt!))}',
+                                textAlign: TextAlign.center,
+                                style: const TextStyle(fontSize: 10),
                               ),
                               const SizedBox(height: 20),
                               Padding(

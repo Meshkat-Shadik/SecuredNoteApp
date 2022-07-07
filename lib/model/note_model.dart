@@ -3,38 +3,6 @@
 //      noteModel = noteModelFromJson(jsonString);
 
 import 'package:equatable/equatable.dart';
-import 'dart:convert';
-
-NoteModel noteModelFromJson(String str) => NoteModel.fromJson(json.decode(str));
-
-String noteModelToJson(NoteModel data) => json.encode(data.toJson());
-
-class NoteModel extends Equatable {
-  const NoteModel({
-    this.datas,
-  });
-
-  final List<Note>? datas;
-
-  NoteModel copyWith({
-    List<Note>? datas,
-    String? uid,
-  }) =>
-      NoteModel(
-        datas: datas ?? this.datas,
-      );
-
-  factory NoteModel.fromJson(Map<String, dynamic> json) => NoteModel(
-        datas: List<Note>.from(json["datas"].map((x) => Note.fromJson(x))),
-      );
-
-  Map<String, dynamic> toJson() => {
-        "datas": List<dynamic>.from(datas!.map((x) => x.toJson())),
-      };
-
-  @override
-  List<Object?> get props => [datas];
-}
 
 class Note extends Equatable {
   const Note({
@@ -43,6 +11,7 @@ class Note extends Equatable {
     this.description,
     this.title,
     this.isFav,
+    this.modifiedAt,
   });
 
   final int? bodyColor;
@@ -50,6 +19,7 @@ class Note extends Equatable {
   final String? description;
   final String? title;
   final bool? isFav;
+  final int? modifiedAt;
 
   Note copyWith({
     int? bodyColor,
@@ -57,6 +27,7 @@ class Note extends Equatable {
     String? description,
     String? title,
     bool? isFav,
+    int? modifiedAt,
   }) =>
       Note(
         bodyColor: bodyColor ?? this.bodyColor,
@@ -64,6 +35,7 @@ class Note extends Equatable {
         description: description ?? this.description,
         title: title ?? this.title,
         isFav: isFav ?? this.isFav,
+        modifiedAt: modifiedAt ?? this.modifiedAt,
       );
 
   factory Note.fromJson(Map<String, dynamic> json) => Note(
@@ -72,6 +44,7 @@ class Note extends Equatable {
         description: json["description"],
         title: json["title"],
         isFav: json["isFav"],
+        modifiedAt: json["modifiedAt"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -80,16 +53,13 @@ class Note extends Equatable {
         "description": description,
         "title": title,
         "isFav": isFav,
+        "modifiedAt": modifiedAt,
       };
-
-  // @override
-  // String toString() {
-  //   return "(title: $title, description: $description, color: $color, bodyColor: $bodyColor, isFav: $isFav)";
-  // }
 
   @override
   bool? get stringify => true;
 
   @override
-  List<Object?> get props => [bodyColor, color, description, title, isFav];
+  List<Object?> get props =>
+      [bodyColor, color, description, title, isFav, modifiedAt];
 }
