@@ -35,7 +35,7 @@ class _AuthPageState extends State<AuthPage> {
                     firebaseAuth
                         .signInWithCredential(authCredential)
                         .then((value) {
-                      Navigator.of(context).push(
+                      Navigator.of(context).pushReplacement(
                         MaterialPageRoute(
                           builder: (context) => const HomePage(),
                         ),

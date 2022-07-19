@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:secured_note_app/auth_page.dart';
 import 'package:secured_note_app/constants.dart';
 import 'package:secured_note_app/details_page.dart';
 import 'package:secured_note_app/model/note_model.dart';
@@ -197,37 +198,6 @@ class _HomePageState extends State<HomePage> {
                                 ),
                               ),
                               const SizedBox(height: 20),
-
-                              // Expanded(
-                              //   child: ClipRRect(
-                              //     borderRadius: const BorderRadius.only(
-                              //       bottomLeft: Radius.circular(10),
-                              //       bottomRight: Radius.circular(10),
-                              //     ),
-                              //     child: InkWell(
-                              //       onTap:
-                              //       child: Stack(
-                              //         fit: StackFit.expand,
-                              //         children: [
-                              //           Container(
-                              //             height: 10,
-                              //             width: size.width / 2.2,
-                              //             color: Color(convertedValue.color!),
-                              //             alignment: Alignment.center,
-                              //             child: const Text(
-                              //               'Details',
-                              //             ),
-                              //           ),
-                              //           Positioned(
-                              //             top: -5,
-                              //             right: 0,
-                              //             child: Container(),
-                              //           ),
-                              //         ],
-                              //       ),
-                              //     ),
-                              //   ),
-                              // )
                             ],
                           ),
                         ),
@@ -252,7 +222,16 @@ class _HomePageState extends State<HomePage> {
             isFavListSelected = !isFavListSelected;
           });
         },
-        onExitPressed: () {},
+        onExitPressed: () {
+          firebaseAuth.signOut().whenComplete(
+                () => Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(
+                    builder: (context) => const AuthPage(),
+                  ),
+                ),
+              );
+          "You have been signed out".showToast(context);
+        },
         isFavActive: isFavListSelected,
       ),
       floatingActionButton: FloatingActionButton(
