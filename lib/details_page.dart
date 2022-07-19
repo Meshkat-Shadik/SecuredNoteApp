@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:secured_note_app/constants.dart';
 import 'package:secured_note_app/extensions/toast_x.dart';
@@ -101,34 +100,46 @@ class _DetailsPageState extends State<DetailsPage> {
               Expanded(
                 child: Column(
                   children: [
-                    TextFormField(
-                      minLines: 2,
-                      maxLines: 5,
-                      keyboardType: TextInputType.multiline,
-                      decoration: InputDecoration(
-                        labelText: 'Title',
-                        filled: true,
-                        fillColor: selectedHeadingColor ?? Colors.transparent,
+                    Container(
+                      decoration: BoxDecoration(
+                        borderRadius: const BorderRadius.only(
+                          topLeft: Radius.circular(10),
+                          topRight: Radius.circular(10),
+                        ),
+                        color: selectedHeadingColor ?? Colors.transparent,
                       ),
-                      style: const TextStyle(
-                        color: Colors.white,
+                      padding: const EdgeInsets.only(left: 10),
+                      child: TextField(
+                        minLines: 2,
+                        maxLines: 5,
+                        keyboardType: TextInputType.multiline,
+                        decoration: const InputDecoration(labelText: 'Title'),
+                        controller: titleController,
                       ),
-                      controller: titleController,
                     ),
-                    TextFormField(
-                      maxLines: 10,
-                      keyboardType: TextInputType.multiline,
-                      decoration: InputDecoration(
-                        labelText: 'Description',
-                        alignLabelWithHint: true,
-                        filled: true,
-                        fillColor:
-                            selectedDescriptionColor ?? Colors.transparent,
+                    Container(
+                      decoration: BoxDecoration(
+                        borderRadius: const BorderRadius.only(
+                          topLeft: Radius.circular(0),
+                          topRight: Radius.circular(0),
+                          bottomLeft: Radius.circular(10),
+                          bottomRight: Radius.circular(10),
+                        ),
+                        color: selectedDescriptionColor ?? Colors.transparent,
                       ),
-                      style: const TextStyle(
-                        color: Colors.white,
+                      padding: const EdgeInsets.only(left: 10),
+                      child: TextField(
+                        maxLines: 10,
+                        keyboardType: TextInputType.multiline,
+                        decoration: const InputDecoration(
+                          labelText: 'Description',
+                          alignLabelWithHint: true,
+                        ),
+                        style: const TextStyle(
+                          color: Colors.white,
+                        ),
+                        controller: descriptionController,
                       ),
-                      controller: descriptionController,
                     ),
                     const SizedBox(height: 20),
                     SizedBox(

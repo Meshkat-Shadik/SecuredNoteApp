@@ -19,6 +19,10 @@ final List<Map<String, dynamic>> selectedColors = [
     "heading": 0xff795548,
     "body": 0xffa1887f,
   },
+  {
+    "heading": 0xffF44336,
+    "body": 0xffE57373,
+  },
 ];
 final googleSignIn = GoogleSignIn();
 final FirebaseAuth firebaseAuth = FirebaseAuth.instance;

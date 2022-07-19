@@ -7,6 +7,7 @@ import 'package:secured_note_app/model/note_model.dart';
 import 'package:secured_note_app/widgets/alert_dialog.dart';
 import 'package:secured_note_app/widgets/my_bottom_appbar.dart';
 import 'package:secured_note_app/extensions/firestore_x.dart';
+import 'package:share_plus/share_plus.dart';
 import './extensions/toast_x.dart';
 import 'package:intl/intl.dart';
 
@@ -60,6 +61,23 @@ class _HomePageState extends State<HomePage> {
                       );
 
                       return InkWell(
+                        onTap: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => DetailsPage(
+                                isEditing: true,
+                                note: Note(
+                                  title: convertedValue.title!,
+                                  bodyColor: convertedValue.bodyColor!,
+                                  isFav: convertedValue.isFav!,
+                                  color: convertedValue.color!,
+                                  description: convertedValue.description!,
+                                ),
+                                id: snapshot.data!.docs[index].id,
+                              ),
+                            ),
+                          );
+                        },
                         onLongPress: () {
                           BlurryDialog alert = BlurryDialog(
                             title: 'Delete Note',
@@ -89,11 +107,15 @@ class _HomePageState extends State<HomePage> {
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               ClipRRect(
-                                borderRadius: BorderRadius.circular(10),
+                                borderRadius: const BorderRadius.only(
+                                  topLeft: Radius.circular(10),
+                                  topRight: Radius.circular(10),
+                                ),
                                 child: Container(
                                   height: 60,
                                   width: size.width / 2.2,
                                   alignment: Alignment.center,
+                                  color: Color(convertedValue.color!),
                                   child: Row(
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceAround,
@@ -110,30 +132,55 @@ class _HomePageState extends State<HomePage> {
                                           ),
                                         ),
                                       ),
-                                      IconButton(
-                                        onPressed: () async {
-                                          firestore
-                                              .updateFav(
-                                                  snapshot.data!.docs[index].id,
-                                                  !convertedValue.isFav!)
-                                              .whenComplete(
-                                                () =>
-                                                    '${convertedValue.title} is ${convertedValue.isFav! ? "deleted from" : "added to"} favourite'
-                                                        .showToast(context),
-                                              );
-                                        },
-                                        icon: Icon(
-                                          Icons.favorite,
-                                          size: 16,
-                                          color: convertedValue.isFav!
-                                              ? Colors.redAccent
-                                              : Colors.grey,
-                                        ),
+                                      Row(
+                                        children: [
+                                          SizedBox(
+                                            width: 20,
+                                            child: IconButton(
+                                              icon: const Icon(
+                                                Icons.share,
+                                                size: 15,
+                                              ),
+                                              onPressed: () {
+                                                Share.share(
+                                                  '${convertedValue.title} - ${convertedValue.description}',
+                                                );
+                                              },
+                                            ),
+                                          ),
+                                          const SizedBox(width: 8),
+                                          SizedBox(
+                                            width: 20,
+                                            child: IconButton(
+                                              onPressed: () async {
+                                                firestore
+                                                    .updateFav(
+                                                        snapshot.data!
+                                                            .docs[index].id,
+                                                        !convertedValue.isFav!)
+                                                    .whenComplete(
+                                                      () =>
+                                                          '${convertedValue.title} is ${convertedValue.isFav! ? "deleted from" : "added to"} favourite'
+                                                              .showToast(
+                                                                  context),
+                                                    );
+                                              },
+                                              icon: Icon(
+                                                Icons.favorite,
+                                                size: 16,
+                                                color: convertedValue.isFav!
+                                                    ? Colors.redAccent
+                                                    : Colors.grey,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
                                       ),
                                     ],
                                   ),
                                 ),
                               ),
+                              const SizedBox(height: 20),
                               Text(
                                 'Updated: ${DateFormat.yMd().add_jm().format(DateTime.fromMicrosecondsSinceEpoch(convertedValue.modifiedAt!))}',
                                 textAlign: TextAlign.center,
@@ -150,44 +197,37 @@ class _HomePageState extends State<HomePage> {
                                 ),
                               ),
                               const SizedBox(height: 20),
-                              Expanded(
-                                child: ClipRRect(
-                                  borderRadius: const BorderRadius.only(
-                                    bottomLeft: Radius.circular(10),
-                                    bottomRight: Radius.circular(10),
-                                  ),
-                                  child: InkWell(
-                                    onTap: () {
-                                      Navigator.of(context).push(
-                                        MaterialPageRoute(
-                                          builder: (context) => DetailsPage(
-                                            isEditing: true,
-                                            note: Note(
-                                              title: convertedValue.title!,
-                                              bodyColor:
-                                                  convertedValue.bodyColor!,
-                                              isFav: convertedValue.isFav!,
-                                              color: convertedValue.color!,
-                                              description:
-                                                  convertedValue.description!,
-                                            ),
-                                            id: snapshot.data!.docs[index].id,
-                                          ),
-                                        ),
-                                      );
-                                    },
-                                    child: Container(
-                                      height: 10,
-                                      width: size.width / 2.2,
-                                      color: Color(convertedValue.color!),
-                                      alignment: Alignment.center,
-                                      child: const Text(
-                                        'Details',
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              )
+
+                              // Expanded(
+                              //   child: ClipRRect(
+                              //     borderRadius: const BorderRadius.only(
+                              //       bottomLeft: Radius.circular(10),
+                              //       bottomRight: Radius.circular(10),
+                              //     ),
+                              //     child: InkWell(
+                              //       onTap:
+                              //       child: Stack(
+                              //         fit: StackFit.expand,
+                              //         children: [
+                              //           Container(
+                              //             height: 10,
+                              //             width: size.width / 2.2,
+                              //             color: Color(convertedValue.color!),
+                              //             alignment: Alignment.center,
+                              //             child: const Text(
+                              //               'Details',
+                              //             ),
+                              //           ),
+                              //           Positioned(
+                              //             top: -5,
+                              //             right: 0,
+                              //             child: Container(),
+                              //           ),
+                              //         ],
+                              //       ),
+                              //     ),
+                              //   ),
+                              // )
                             ],
                           ),
                         ),
