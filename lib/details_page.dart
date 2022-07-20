@@ -113,7 +113,10 @@ class _DetailsPageState extends State<DetailsPage> {
                         minLines: 2,
                         maxLines: 5,
                         keyboardType: TextInputType.multiline,
-                        decoration: const InputDecoration(labelText: 'Title'),
+                        decoration: InputDecoration(
+                          labelText: 'Title',
+                          border: widget.isEditing ? InputBorder.none : null,
+                        ),
                         controller: titleController,
                       ),
                     ),
@@ -131,9 +134,10 @@ class _DetailsPageState extends State<DetailsPage> {
                       child: TextField(
                         maxLines: 10,
                         keyboardType: TextInputType.multiline,
-                        decoration: const InputDecoration(
+                        decoration: InputDecoration(
                           labelText: 'Description',
                           alignLabelWithHint: true,
+                          border: widget.isEditing ? InputBorder.none : null,
                         ),
                         style: const TextStyle(
                           color: Colors.white,
