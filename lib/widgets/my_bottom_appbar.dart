@@ -4,12 +4,12 @@ class MyBottomAppbar extends StatelessWidget {
   const MyBottomAppbar({
     Key? key,
     required this.onFavPressed,
-    required this.onExitPressed,
+    required this.onExpensePressed,
     required this.isFavActive,
   }) : super(key: key);
 
   final VoidCallback onFavPressed;
-  final VoidCallback onExitPressed;
+  final VoidCallback onExpensePressed;
   final bool isFavActive;
 
   @override
@@ -28,8 +28,11 @@ class MyBottomAppbar extends StatelessWidget {
             tooltip: 'Favourites',
           ),
           IconButton(
-            onPressed: onExitPressed,
-            icon: const Icon(Icons.exit_to_app),
+            onPressed: onExpensePressed,
+            icon: const Icon(
+              Icons.content_paste,
+              size: 22,
+            ),
             tooltip: 'Logout',
           ),
         ],

@@ -4,6 +4,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:secured_note_app/auth_page.dart';
 import 'package:secured_note_app/constants.dart';
 import 'package:secured_note_app/details_page.dart';
+import 'package:secured_note_app/expense_page.dart';
 import 'package:secured_note_app/model/note_model.dart';
 import 'package:secured_note_app/widgets/alert_dialog.dart';
 import 'package:secured_note_app/widgets/my_bottom_appbar.dart';
@@ -32,6 +33,26 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          'Welcome ${firebaseAuth.currentUser?.displayName?.split(' ')[0]}',
+        ),
+        actions: [
+          IconButton(
+            onPressed: () {
+              firebaseAuth.signOut().whenComplete(
+                    () => Navigator.of(context).pushReplacement(
+                      MaterialPageRoute(
+                        builder: (context) => const AuthPage(),
+                      ),
+                    ),
+                  );
+              "You have been signed out".showToast(context);
+            },
+            icon: const Icon(Icons.exit_to_app),
+          ),
+        ],
+      ),
       body: Container(
         padding: const EdgeInsets.all(20),
         child: StreamBuilder(
@@ -222,15 +243,9 @@ class _HomePageState extends State<HomePage> {
             isFavListSelected = !isFavListSelected;
           });
         },
-        onExitPressed: () {
-          firebaseAuth.signOut().whenComplete(
-                () => Navigator.of(context).pushReplacement(
-                  MaterialPageRoute(
-                    builder: (context) => const AuthPage(),
-                  ),
-                ),
-              );
-          "You have been signed out".showToast(context);
+        onExpensePressed: () async {
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => const ExpenseScreen()));
         },
         isFavActive: isFavListSelected,
       ),
