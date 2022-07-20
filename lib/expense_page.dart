@@ -17,6 +17,32 @@ class ExpenseScreen extends StatefulWidget {
 class _ExpenseScreenState extends State<ExpenseScreen> {
   String? dropdownValue;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  int totalCost = 0;
+
+  void getTotal() {
+    firestore
+        .expenseCollection(DateFormat('dd-MM-yyyy').format(
+            DateTime.fromMicrosecondsSinceEpoch(
+                DateTime.now().microsecondsSinceEpoch)))
+        .snapshots()
+        .listen((event) {
+      totalCost = event.docs.fold<int>(
+        0,
+        (prev, current) =>
+            prev +
+            (AccountModel.fromJson(current.data() as Map<String, dynamic>)
+                .amount),
+      );
+    });
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (mounted) {
+      getTotal();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -48,110 +74,149 @@ class _ExpenseScreenState extends State<ExpenseScreen> {
                 ),
               );
             } else {
-              return ListView.separated(
-                separatorBuilder: (context, index) => const Divider(),
-                itemCount: snapshot.data!.docs.length,
-                itemBuilder: ((context, index) {
-                  final accountDetails = AccountModel.fromJson(
-                      snapshot.data!.docs[index].data()
-                          as Map<String, dynamic>);
-                  return Dismissible(
-                    key: Key(snapshot.data!.docs[index].id),
-                    background: Container(
-                      color: Colors.red,
-                      alignment: Alignment.centerRight,
-                      padding: const EdgeInsets.only(right: 20),
-                      child: const Text(
-                        'Slide to Delete this Record',
-                      ),
-                    ),
-                    direction: DismissDirection.endToStart,
-                    confirmDismiss: (direction) {
-                      return showDialog(
-                        context: _scaffoldKey.currentContext!,
-                        builder: (context) {
-                          return BlurryDialog(
-                            title: 'Warning ⚠',
-                            content: 'Do you want to delete this record?',
-                            onContinue: () async {
-                              await firestore
-                                  .deleteAccount(
-                                    snapshot.data!.docs[index].id,
-                                  )
-                                  .then(
-                                    (value) => "Record Deleted Successfully"
-                                        .showToast(
-                                            _scaffoldKey.currentContext!),
-                                    onError: (e) => e.toString().showToast(
-                                        _scaffoldKey.currentContext!),
-                                  );
-                            },
-                          );
-                        },
-                      );
-                    },
-                    child: ListTile(
-                      tileColor: accountDetails.type == 'Cost'
-                          ? Colors.red.shade900
-                          : Colors.green.shade900,
-                      contentPadding: const EdgeInsets.only(right: 0, left: 10),
-                      horizontalTitleGap: 5,
-                      leading: accountDetails.type == 'Cost'
-                          ? const Icon(Icons.money_off)
-                          : const Icon(Icons.attach_money),
-                      title: Text(
-                        accountDetails.title + '',
-                        maxLines: 3,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      trailing: Container(
-                        padding: const EdgeInsets.only(left: 5),
-                        width: 150,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              accountDetails.amount.toString(),
-                              style: const TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
+              return Column(
+                children: [
+                  Expanded(
+                    child: ListView.separated(
+                        separatorBuilder: (context, index) => const Divider(),
+                        itemCount: snapshot.data!.docs.length,
+                        itemBuilder: (context, index) {
+                          final accountDetails = AccountModel.fromJson(
+                              snapshot.data!.docs[index].data()
+                                  as Map<String, dynamic>);
+                          return Dismissible(
+                            key: Key(snapshot.data!.docs[index].id),
+                            background: Container(
+                              color: Colors.red,
+                              alignment: Alignment.centerRight,
+                              padding: const EdgeInsets.only(right: 20),
+                              child: const Text(
+                                'Slide to Delete this Record',
                               ),
                             ),
-                            Row(
-                              children: [
-                                IconButton(
-                                  onPressed: () {
-                                    showModalBottomSheet(
-                                      backgroundColor: Colors.transparent,
-                                      context: context,
-                                      builder: (context) {
-                                        return BottomSheetWidget(
-                                          isEditing: true,
-                                          accountDetails: AccountModel(
-                                            title: accountDetails.title.trim(),
-                                            type: accountDetails.type,
-                                            amount: accountDetails.amount,
-                                          ),
-                                          id: snapshot.data!.docs[index].id,
-                                        );
-                                      },
-                                    );
-                                  },
-                                  icon: const Icon(Icons.edit),
+                            direction: DismissDirection.endToStart,
+                            confirmDismiss: (direction) {
+                              return showDialog(
+                                context: _scaffoldKey.currentContext!,
+                                builder: (context) {
+                                  return BlurryDialog(
+                                    title: 'Warning ⚠',
+                                    content:
+                                        'Do you want to delete this record?',
+                                    onContinue: () async {
+                                      await firestore
+                                          .deleteAccount(
+                                            snapshot.data!.docs[index].id,
+                                          )
+                                          .then(
+                                            (value) =>
+                                                "Record Deleted Successfully"
+                                                    .showToast(_scaffoldKey
+                                                        .currentContext!),
+                                            onError: (e) => e
+                                                .toString()
+                                                .showToast(_scaffoldKey
+                                                    .currentContext!),
+                                          );
+                                    },
+                                  );
+                                },
+                              );
+                            },
+                            child: ListTile(
+                              tileColor: accountDetails.type == 'Cost'
+                                  ? Colors.red.shade900
+                                  : Colors.green.shade900,
+                              contentPadding:
+                                  const EdgeInsets.only(right: 0, left: 10),
+                              horizontalTitleGap: 5,
+                              leading: accountDetails.type == 'Cost'
+                                  ? const Icon(Icons.money_off)
+                                  : const Icon(Icons.attach_money),
+                              title: Text(
+                                accountDetails.title + '',
+                                maxLines: 3,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                              trailing: Container(
+                                padding: const EdgeInsets.only(left: 5),
+                                width: 150,
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      accountDetails.amount.toString(),
+                                      style: const TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    Row(
+                                      children: [
+                                        IconButton(
+                                          onPressed: () {
+                                            showModalBottomSheet(
+                                              backgroundColor:
+                                                  Colors.transparent,
+                                              context: context,
+                                              builder: (context) {
+                                                return BottomSheetWidget(
+                                                  isEditing: true,
+                                                  accountDetails: AccountModel(
+                                                    title: accountDetails.title
+                                                        .trim(),
+                                                    type: accountDetails.type,
+                                                    amount:
+                                                        accountDetails.amount,
+                                                  ),
+                                                  id: snapshot
+                                                      .data!.docs[index].id,
+                                                );
+                                              },
+                                            );
+                                          },
+                                          icon: const Icon(Icons.edit),
+                                        ),
+                                        const SizedBox(width: 10),
+                                        Container(
+                                          width: 1,
+                                          color: Colors.red,
+                                        ),
+                                      ],
+                                    )
+                                  ],
                                 ),
-                                const SizedBox(width: 10),
-                                Container(
-                                  width: 1,
-                                  color: Colors.red,
-                                ),
-                              ],
-                            )
-                          ],
+                              ),
+                            ),
+                          );
+                        }),
+                  ),
+                  Container(
+                    height: 100,
+                    color: Colors.blueGrey.shade900,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        const Text(
+                          'Total Cost',
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
-                      ),
+                        Text(
+                          totalCost.toString(),
+                          style: const TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const SizedBox(width: 20),
+                      ],
                     ),
-                  );
-                }),
+                  ),
+                ],
               );
             }
           } else {
