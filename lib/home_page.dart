@@ -88,13 +88,7 @@ class _HomePageState extends State<HomePage> {
                             MaterialPageRoute(
                               builder: (context) => DetailsPage(
                                 isEditing: true,
-                                note: Note(
-                                  title: convertedValue.title!,
-                                  bodyColor: convertedValue.bodyColor!,
-                                  isFav: convertedValue.isFav!,
-                                  color: convertedValue.color!,
-                                  description: convertedValue.description!,
-                                ),
+                                note: convertedValue,
                                 id: snapshot.data!.docs[index].id,
                               ),
                             ),

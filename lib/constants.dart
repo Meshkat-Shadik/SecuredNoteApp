@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/painting.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 final List<Map<String, dynamic>> selectedColors = [
@@ -24,6 +25,9 @@ final List<Map<String, dynamic>> selectedColors = [
     "body": 0xffE57373,
   },
 ];
+
+const Color redColor = Color(0xffA70923);
+const Color greenColor = Color(0xffA4DD04);
 final googleSignIn = GoogleSignIn();
 final FirebaseAuth firebaseAuth = FirebaseAuth.instance;
 final FirebaseFirestore firestore = FirebaseFirestore.instance;
