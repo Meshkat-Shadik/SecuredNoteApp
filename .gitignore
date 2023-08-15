@@ -32,7 +32,6 @@
 .pub/
 /build/
 /windows/
-/android/app/google-services.json
 
 pubspec.lock
 
