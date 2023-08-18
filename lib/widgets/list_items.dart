@@ -133,7 +133,7 @@ class _ListItemsState extends State<ListItems> {
                                   ? const Icon(Icons.money_off)
                                   : const Icon(Icons.attach_money),
                               title: Text(
-                                accountDetails.title + '',
+                                accountDetails.title,
                                 maxLines: 3,
                                 overflow: TextOverflow.ellipsis,
                               ),

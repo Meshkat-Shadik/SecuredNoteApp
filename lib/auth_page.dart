@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:secured_note_app/api/local_auth_api.dart';
 import 'package:secured_note_app/constants.dart';
 import 'package:secured_note_app/home_page.dart';
 
@@ -34,20 +35,21 @@ class _AuthPageState extends State<AuthPage> {
 
                     firebaseAuth
                         .signInWithCredential(authCredential)
-                        .then((value) {
-                      Navigator.of(context).pushReplacement(
-                        MaterialPageRoute(
-                          builder: (context) => const HomePage(),
-                        ),
-                      );
-                      // final isAuthenticated = await LocalAuthApi.authenticate();
-                      // if (isAuthenticated) {
-                      //   Navigator.of(context).push(
-                      //     MaterialPageRoute(
-                      //       builder: (context) => const HomePage(),
-                      //     ),
-                      //   );
-                      // }
+                        .then((value) async {
+                      // Navigator.of(context).pushReplacement(
+                      //   MaterialPageRoute(
+                      //     builder: (context) => const HomePage(),
+                      //   ),
+                      // );
+                      final isAuthenticated = await LocalAuthApi.authenticate();
+                      print(isAuthenticated);
+                      if (isAuthenticated && context.mounted) {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => const HomePage(),
+                          ),
+                        );
+                      }
                     });
                   }
                 },

@@ -22,9 +22,9 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   void deleteNote(String id, String title, BuildContext context) {
-    firestore.deleteNote(id).whenComplete(() => {
-          'Note $title deleted successfully'.showToast(context),
-        });
+    firestore.deleteNote(id).whenComplete(
+          () => 'Note $title deleted successfully'.showToast(context),
+        );
   }
 
   bool isFavListSelected = false;
