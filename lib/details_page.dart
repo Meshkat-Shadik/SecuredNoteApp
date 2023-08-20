@@ -188,14 +188,14 @@ class _DetailsPageState extends State<DetailsPage> {
                   onPressed: () {
                     widget.isEditing ? updateNote(context) : addNote();
                   },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: selectedButtonColor,
+                  ),
                   child: Text(
                     widget.isEditing ? 'Update' : 'Add',
                     style: const TextStyle(
                       color: Colors.white,
                     ),
-                  ),
-                  style: ElevatedButton.styleFrom(
-                    primary: selectedButtonColor,
                   ),
                 ),
               ),

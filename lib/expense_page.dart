@@ -140,7 +140,7 @@ class _BottomSheetWidgetState extends State<BottomSheetWidget> {
                             _choicesList[index],
                             style: Theme.of(context)
                                 .textTheme
-                                .bodyText2!
+                                .bodyMedium!
                                 .copyWith(color: Colors.white, fontSize: 14),
                           ),
                           selected: defaultChoiceIndex == index,

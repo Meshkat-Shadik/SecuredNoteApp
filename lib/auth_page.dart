@@ -36,19 +36,34 @@ class _AuthPageState extends State<AuthPage> {
                     firebaseAuth
                         .signInWithCredential(authCredential)
                         .then((value) async {
-                      // Navigator.of(context).pushReplacement(
-                      //   MaterialPageRoute(
-                      //     builder: (context) => const HomePage(),
-                      //   ),
-                      // );
                       final isAuthenticated = await LocalAuthApi.authenticate();
-                      print(isAuthenticated);
-                      if (isAuthenticated && context.mounted) {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) => const HomePage(),
-                          ),
-                        );
+                      if (context.mounted) {
+                        if (isAuthenticated) {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => const HomePage(),
+                            ),
+                          );
+                        } else {
+                          //show snackbar
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text(
+                                'Your device does not support biometric authentication.\nTry without it.',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                ),
+                                textAlign: TextAlign.left,
+                              ),
+                              backgroundColor: Colors.red,
+                            ),
+                          );
+                          Navigator.of(context).pushReplacement(
+                            MaterialPageRoute(
+                              builder: (context) => const HomePage(),
+                            ),
+                          );
+                        }
                       }
                     });
                   }
